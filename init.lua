@@ -83,6 +83,32 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+-------------------------------------------------
+---                  CUSTOM
+vim.opt.number = true
+vim.opt.relativenumber = true
+--
+--
+vim.o.expandtab = true
+vim.o.shiftwidth = 3
+vim.o.tabstop = 3
+vim.o.softtabstop = 3
+vim.o.smartindent = true
+
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldlevel = 99
+
+-- Restore default behavior for 'f', 'F', 't', 'T' in normal mode
+vim.keymap.set('n', 'f', 'f', { noremap = true })
+vim.keymap.set('n', 'F', 'F', { noremap = true })
+vim.keymap.set('n', 't', 't', { noremap = true })
+vim.keymap.set('n', 'T', 'T', { noremap = true })
+---
+---
+---
+---
+-------------------------------------------------
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -266,6 +292,12 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
+  -- Automatically close and rename HTML/JSX tags
+  {
+    'windwp/nvim-ts-autotag',
+    event = 'InsertEnter',
+    opts = {}, -- default options are fine
+  },
   --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
@@ -413,6 +445,23 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        -- defaults = {
+        --   -- Always show hidden files (like .env, .gitignore, etc.)
+        --   file_ignore_patterns = {}, -- disable ignoring by gitignore
+        --   hidden = true,
+        -- },
+        --
+        -- pickers = {
+        --   find_files = {
+        --     hidden = true, -- show hidden files
+        --     no_ignore = true, -- don’t follow .gitignore
+        --   },
+        --   live_grep = {
+        --     additional_args = function(_)
+        --       return { '--hidden' } -- include hidden files in grep
+        --     end,
+        --   },
+        -- },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -671,18 +720,20 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
+        clangd = {},
+        gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
+        prismals = {},
+        tailwindcss = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -944,7 +995,25 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'javascript',
+        'typescript',
+        'prisma',
+        'c',
+        'cpp',
+        'rust',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -955,6 +1024,9 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      autotag = {
+        enable = true,
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -973,18 +1045,18 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
